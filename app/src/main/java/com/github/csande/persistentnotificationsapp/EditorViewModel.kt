@@ -26,12 +26,27 @@ class EditorViewModel(
     /** ID of the note being edited, or null for a new, unsaved note. */
     private var noteId by mutableStateOf(savedState.get<Int>(KEY_NOTE_ID))
 
+    /** The stored text of the note when it was opened. Empty for a new note. */
+    private var originalText by mutableStateOf(savedState.get<String>(KEY_ORIGINAL_TEXT).orEmpty())
+
     var field by mutableStateOf(
         savedState.get<String>(KEY_TEXT).orEmpty().let { TextFieldValue(it, TextRange(it.length)) }
     )
         private set
 
     val isEditing: Boolean get() = noteId != null
+
+    /**
+     * Whether saving is currently allowed. A new note needs non-blank text;
+     * an existing note additionally needs text that differs from the stored text.
+     */
+    val canSave: Boolean
+        get() {
+            // `this.field` is required: a bare `field` inside an accessor refers to the
+            // accessor's own backing field, not to the `field` property declared above.
+            val text = this.field.text.trim()
+            return text.isNotEmpty() && (!isEditing || text != originalText)
+        }
 
     /** Loads the note with the given [id]. A null or unknown ID results in a blank, new note. */
     fun openNote(id: Int?) {
@@ -43,12 +58,11 @@ class EditorViewModel(
         savedState[KEY_TEXT] = value.text
     }
 
-    /** Saves the note and posts or updates its notification. Returns false if the text is blank. */
+    /** Saves the note and posts or updates its notification. Returns false if saving is not allowed. */
     fun save(): Boolean {
-        val text = field.text.trim()
-        if (text.isEmpty()) return false
+        if (!canSave) return false
 
-        val note = repository.save(noteId, text)
+        val note = repository.save(noteId, field.text.trim())
         NotificationHelper.show(getApplication(), note)
         return true
     }
@@ -65,6 +79,9 @@ class EditorViewModel(
         savedState[KEY_NOTE_ID] = note?.id
 
         val text = note?.text.orEmpty()
+        originalText = text
+        savedState[KEY_ORIGINAL_TEXT] = text
+
         field = TextFieldValue(text, TextRange(text.length))
         savedState[KEY_TEXT] = text
     }
@@ -72,5 +89,6 @@ class EditorViewModel(
     private companion object {
         const val KEY_NOTE_ID = "note_id"
         const val KEY_TEXT = "text"
+        const val KEY_ORIGINAL_TEXT = "original_text"
     }
 }

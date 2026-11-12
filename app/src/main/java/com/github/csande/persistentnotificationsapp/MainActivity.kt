@@ -40,9 +40,11 @@ class MainActivity : ComponentActivity() {
                 EditorScreen(
                     isEditing = viewModel.isEditing,
                     field = viewModel.field,
+                    canSave = viewModel.canSave,
                     onFieldChange = viewModel::onFieldChange,
                     onSave = ::save,
                     onDelete = ::delete,
+                    onCancel = ::cancel,
                 )
             }
         }
@@ -66,6 +68,11 @@ class MainActivity : ComponentActivity() {
 
     private fun delete() {
         viewModel.delete()
+        finish()
+    }
+
+    /** Closes the editor and discards any unsaved changes. */
+    private fun cancel() {
         finish()
     }
 

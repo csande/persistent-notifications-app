@@ -1,6 +1,7 @@
 package com.github.csande.persistentnotificationsapp.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -16,6 +17,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,9 +38,11 @@ import com.github.csande.persistentnotificationsapp.ui.theme.QuickNoteTheme
 fun EditorScreen(
     isEditing: Boolean,
     field: TextFieldValue,
+    canSave: Boolean,
     onFieldChange: (TextFieldValue) -> Unit,
     onSave: () -> Unit,
     onDelete: () -> Unit,
+    onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -77,26 +81,45 @@ fun EditorScreen(
                     .focusRequester(focusRequester),
             )
 
+            // Each button sits in an equal-width slot, so the middle slot is truly centered
+            // regardless of how wide the labels on either side are.
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.End),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                // "Delete" only appears when an existing note is being edited.
-                if (isEditing) {
-                    OutlinedButton(
-                        onClick = onDelete,
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.error
-                        ),
-                    ) {
-                        Text(stringResource(R.string.action_delete))
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.CenterStart,
+                ) {
+                    Button(onClick = onSave, enabled = canSave) {
+                        Text(stringResource(R.string.action_save))
                     }
                 }
-                Button(
-                    onClick = onSave,
-                    enabled = field.text.isNotBlank(),
+
+                // "Delete" only appears when an existing note is being edited.
+                if (isEditing) {
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        OutlinedButton(
+                            onClick = onDelete,
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = MaterialTheme.colorScheme.error
+                            ),
+                        ) {
+                            Text(stringResource(R.string.action_delete))
+                        }
+                    }
+                }
+
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.CenterEnd,
                 ) {
-                    Text(stringResource(R.string.action_save))
+                    TextButton(onClick = onCancel) {
+                        Text(stringResource(R.string.action_cancel))
+                    }
                 }
             }
         }
@@ -105,14 +128,32 @@ fun EditorScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun EditorScreenPreview() {
+private fun EditorScreenNewPreview() {
+    QuickNoteTheme {
+        EditorScreen(
+            isEditing = false,
+            field = TextFieldValue("Buy milk"),
+            canSave = true,
+            onFieldChange = {},
+            onSave = {},
+            onDelete = {},
+            onCancel = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun EditorScreenEditPreview() {
     QuickNoteTheme {
         EditorScreen(
             isEditing = true,
             field = TextFieldValue("Buy milk"),
+            canSave = false,
             onFieldChange = {},
             onSave = {},
             onDelete = {},
+            onCancel = {},
         )
     }
 }

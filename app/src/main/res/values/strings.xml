@@ -1,0 +1,15 @@
+<resources>
+    <!-- User-facing app name. Change this value to rename the app. -->
+    <string name="app_name">QuickNote</string>
+
+    <string name="channel_name">Notes</string>
+    <string name="channel_description">Persistent notifications that stay in the notification shade</string>
+
+    <string name="title_new_note">New note</string>
+    <string name="title_edit_note">Edit note</string>
+    <string name="note_label">Note</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+
+    <string name="notifications_disabled_message">Notifications are disabled. Enable them in system settings for notes to appear.</string>
+</resources>

@@ -12,5 +12,8 @@
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>
 
+    <!-- Second line of the Quick Settings tile. The first line is the app name. -->
+    <string name="tile_subtitle">New note</string>
+
     <string name="notifications_disabled_message">Notifications are disabled. Enable them in system settings for notes to appear.</string>
 </resources>

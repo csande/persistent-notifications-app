@@ -1,7 +1,6 @@
 package com.github.csande.persistentnotificationsapp.ui
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -10,10 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,7 +37,6 @@ fun EditorScreen(
     canSave: Boolean,
     onFieldChange: (TextFieldValue) -> Unit,
     onSave: () -> Unit,
-    onDelete: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -81,45 +76,17 @@ fun EditorScreen(
                     .focusRequester(focusRequester),
             )
 
-            // Each button sits in an equal-width slot, so the middle slot is truly centered
-            // regardless of how wide the labels on either side are.
+            // Save on the left, Cancel on the right. Notes are deleted from their notification.
             Row(
                 modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.CenterStart,
-                ) {
-                    Button(onClick = onSave, enabled = canSave) {
-                        Text(stringResource(R.string.action_save))
-                    }
+                Button(onClick = onSave, enabled = canSave) {
+                    Text(stringResource(R.string.action_save))
                 }
-
-                // "Delete" only appears when an existing note is being edited.
-                if (isEditing) {
-                    Box(
-                        modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        OutlinedButton(
-                            onClick = onDelete,
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = MaterialTheme.colorScheme.error
-                            ),
-                        ) {
-                            Text(stringResource(R.string.action_delete))
-                        }
-                    }
-                }
-
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.CenterEnd,
-                ) {
-                    TextButton(onClick = onCancel) {
-                        Text(stringResource(R.string.action_cancel))
-                    }
+                TextButton(onClick = onCancel) {
+                    Text(stringResource(R.string.action_cancel))
                 }
             }
         }
@@ -136,7 +103,6 @@ private fun EditorScreenNewPreview() {
             canSave = true,
             onFieldChange = {},
             onSave = {},
-            onDelete = {},
             onCancel = {},
         )
     }
@@ -152,7 +118,6 @@ private fun EditorScreenEditPreview() {
             canSave = false,
             onFieldChange = {},
             onSave = {},
-            onDelete = {},
             onCancel = {},
         )
     }

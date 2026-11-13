@@ -67,13 +67,6 @@ class EditorViewModel(
         return true
     }
 
-    /** Deletes the current note and removes its notification. */
-    fun delete() {
-        val id = noteId ?: return
-        repository.delete(id)
-        NotificationHelper.cancel(getApplication(), id)
-    }
-
     private fun showNote(note: Note?) {
         noteId = note?.id
         savedState[KEY_NOTE_ID] = note?.id

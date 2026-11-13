@@ -43,7 +43,6 @@ class MainActivity : ComponentActivity() {
                     canSave = viewModel.canSave,
                     onFieldChange = viewModel::onFieldChange,
                     onSave = ::save,
-                    onDelete = ::delete,
                     onCancel = ::cancel,
                 )
             }
@@ -63,11 +62,6 @@ class MainActivity : ComponentActivity() {
         if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
             Toast.makeText(this, R.string.notifications_disabled_message, Toast.LENGTH_LONG).show()
         }
-        finish()
-    }
-
-    private fun delete() {
-        viewModel.delete()
         finish()
     }
 

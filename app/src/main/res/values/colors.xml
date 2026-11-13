@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#6750A4</color>
+
+    <!-- Title color of the "Delete" action on note notifications (Material 3 error red). -->
+    <color name="delete_action">#B3261E</color>
 </resources>

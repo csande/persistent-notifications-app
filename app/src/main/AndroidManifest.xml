@@ -38,6 +38,11 @@
             android:name=".notification.NotificationDismissedReceiver"
             android:exported="false" />
 
+        <!-- Deletes a note when the user taps "Delete" on its notification. -->
+        <receiver
+            android:name=".notification.DeleteNoteReceiver"
+            android:exported="false" />
+
         <!-- Quick Settings tile that opens a new note. Added by the user via the Quick Settings edit menu. -->
         <service
             android:name=".tile.NewNoteTileService"

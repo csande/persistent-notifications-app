@@ -44,6 +44,9 @@ object NotificationHelper {
             .setAutoCancel(false)
             .setOnlyAlertOnce(true)
             .setCategory(NotificationCompat.CATEGORY_STATUS)
+            // Show the full note text on the lock screen. The default (private) hides the
+            // content behind a generic placeholder when the device is locked.
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .build()
 
         manager.notify(note.id, notification)

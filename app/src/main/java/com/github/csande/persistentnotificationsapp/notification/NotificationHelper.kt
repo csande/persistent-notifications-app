@@ -5,9 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import androidx.core.app.NotificationCompat
 import com.github.csande.persistentnotificationsapp.MainActivity
 import com.github.csande.persistentnotificationsapp.R
@@ -38,21 +35,16 @@ object NotificationHelper {
         val deleteIntent = PendingIntent.getBroadcast(appContext, note.id, dismissIntent, flags)
 
         // Text-only "Delete" action, shown when the notification is expanded. It deletes the
-        // note without opening the app. The red title is best effort: the system may adjust
-        // or ignore the color depending on the Android version and the light/dark mode.
+        // note without opening the app.
         val deleteNoteIntent = Intent(appContext, DeleteNoteReceiver::class.java)
             .putExtra(MainActivity.EXTRA_NOTE_ID, note.id)
         val deleteActionIntent =
             PendingIntent.getBroadcast(appContext, note.id, deleteNoteIntent, flags)
-        val deleteActionTitle = SpannableString(appContext.getString(R.string.action_delete)).apply {
-            setSpan(
-                ForegroundColorSpan(appContext.getColor(R.color.delete_action)),
-                0,
-                length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
-            )
-        }
-        val deleteAction = NotificationCompat.Action.Builder(0, deleteActionTitle, deleteActionIntent)
+        val deleteAction = NotificationCompat.Action.Builder(
+            0,
+            appContext.getString(R.string.action_delete),
+            deleteActionIntent,
+        )
             // Notes are visible on the lock screen, so deleting from there requires an unlock.
             .setAuthenticationRequired(true)
             .build()

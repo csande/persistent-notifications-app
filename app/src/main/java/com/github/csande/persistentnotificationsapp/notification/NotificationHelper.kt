@@ -35,7 +35,9 @@ object NotificationHelper {
         val deleteIntent = PendingIntent.getBroadcast(appContext, note.id, dismissIntent, flags)
 
         // Text-only "Delete" action, shown when the notification is expanded. It deletes the
-        // note without opening the app.
+        // note without opening the app. Authentication is deliberately not required, so the
+        // action also works on the lock screen and, as a plain broadcast, does not close the
+        // notification shade.
         val deleteNoteIntent = Intent(appContext, DeleteNoteReceiver::class.java)
             .putExtra(MainActivity.EXTRA_NOTE_ID, note.id)
         val deleteActionIntent =
@@ -44,10 +46,7 @@ object NotificationHelper {
             0,
             appContext.getString(R.string.action_delete),
             deleteActionIntent,
-        )
-            // Notes are visible on the lock screen, so deleting from there requires an unlock.
-            .setAuthenticationRequired(true)
-            .build()
+        ).build()
 
         val notification = NotificationCompat.Builder(appContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)

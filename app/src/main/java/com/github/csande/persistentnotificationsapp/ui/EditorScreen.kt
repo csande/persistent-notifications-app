@@ -68,7 +68,6 @@ fun EditorScreen(
             OutlinedTextField(
                 value = field,
                 onValueChange = onFieldChange,
-                label = { Text(stringResource(R.string.note_label)) },
                 minLines = 4,
                 modifier = Modifier
                     .fillMaxWidth()

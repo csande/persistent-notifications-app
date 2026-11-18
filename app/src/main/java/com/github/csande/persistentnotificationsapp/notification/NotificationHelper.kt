@@ -5,6 +5,10 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import androidx.core.app.NotificationCompat
 import com.github.csande.persistentnotificationsapp.MainActivity
 import com.github.csande.persistentnotificationsapp.R
@@ -48,10 +52,24 @@ object NotificationHelper {
             deleteActionIntent,
         ).build()
 
+        // Collapsed: the note text is the notification title. The system renders titles in
+        // its bold title style, and it hides the app name in the collapsed state whenever a
+        // title is present (it only shows the app name when there is no title or subtext).
+        //
+        // Expanded: the full note text is shown in bold. The empty big content title hides the
+        // title line in the expanded view, so the text is not repeated.
+        val boldText = SpannableString(note.text).apply {
+            setSpan(StyleSpan(Typeface.BOLD), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
         val notification = NotificationCompat.Builder(appContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentText(note.text)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(note.text))
+            .setContentTitle(note.text)
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .setBigContentTitle("")
+                    .bigText(boldText)
+            )
             .setContentIntent(contentIntent)
             .setDeleteIntent(deleteIntent)
             .addAction(deleteAction)
